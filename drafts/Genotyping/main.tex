@@ -1,11 +1,13 @@
 \documentclass{article}
-\usepackage{graphicx} %required for inserting images 
-\usepackage[backend=biber]{biblatex} %required for citations
-%\usepackage[style=authoryear]{biblatex} 
-\addbibresource{reference.bib}
+\usepackage[T1]{fontenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,calc}
+\usepackage[backend=biber,style=authoryear]{biblatex}
+\addbibresource{references.bib}
 
-\title{CHAPTER ONE: Introductory Chapter}
-\title{State-Of-The-Art Genotyping Methods for  Model Organisms: Technologies, Pipelines, and System Genetics Applications (2020-Present)} 
+\title{Genotyping in Model Organisms Since 2020: Methods, Pipelines, and Systems Genetics Applications}
 \author{Felix Lisso}
 \date{March 2026}
 
@@ -13,50 +15,106 @@
 
 \maketitle
 
-\section{Abstract} 
+\begin{abstract}
+Genotyping remains central to model organism genetics because it links genome variation to mapping, validation, and phenotype analysis. Since 2020, the field has shifted from confirming a few expected markers to genome-wide characterization of large and diverse populations. This change has been driven by cheaper sequencing, improved reference genomes, low-coverage whole-genome strategies, and wider use of long-read platforms. At the same time, genotyping has expanded beyond variant measurement alone to include variant calling, imputation, validation, standardization, and integration with phenotype data. This review examines classical and sequencing-based genotyping methods that remain important in model organism research, with emphasis on genome editing, outbred populations, computational pipelines, and systems genetics resources. Across these areas, a common theme emerges: the most informative studies now combine suitable assay design with strong reference resources, transparent analytical workflows, and data platforms that make genotype information reusable across experiments and populations.
+\end{abstract}
 
 \section{Introduction}
+Genotyping is fundamental to modern genetics because mapping studies and genotype--phenotype analyses depend on accurate knowledge of allelic state. Earlier workflows often asked a narrow question: is a known marker or mutation present? Current studies more often ask how many variants across the genome act together to shape complex traits and molecular phenotypes. This shift has moved genotyping from a supporting laboratory task to a central part of study design and interpretation \parencite{kockum2023overview,satam2023next,zinski2021genome}.
 
-\section{Classical Genotyping Approaches}
+Model organisms remain especially valuable because they offer controlled breeding, standardized phenotyping, and cumulative community resources, a point stressed by \textcite{matthews2020turn}. These strengths have grown even more important as cheaper sequencing has made larger mapping populations practical \parencite{lou2021beginner}, and as improved rat and killifish resources have made genomes, annotations, and shared datasets easier to reuse across studies \parencite{de2024revamped,poeschla2020turquoise,vedi20232022}. This review considers genotyping methods developed or widely adopted since 2020 and follows their use across major model organism systems, population resources, analytical pipelines, and systems genetics applications.
 
-\subsection{PCR-based genotyping}
+Figure~\ref{fig:paper-flow} provides a roadmap of the review.
+\begin{figure}[t]
+  \centering
+  \input{figures/paper_flow}
+  \caption{Roadmap of the manuscript and how the major sections connect.}
+  \label{fig:paper-flow}
+\end{figure}
 
-\subsection{SNP arrays}
+\section{Classical Genotyping Approaches Still in Use}
+Sequencing-based methods now dominate much of the field, but classical genotyping approaches still matter. Many experiments still need rapid confirmation of known alleles, strain tracking, or routine screening across large cohorts, as summarized by \textcite{kockum2023overview}. In these settings, established assays remain attractive because they are simple, fast, and low cost, a pattern illustrated by routine mutation screening in \textcite{zheng2022simple} and by colony quality control in \textcite{sigmon2020content}.
 
-\section{Sequencing-Based Genotyping}
+\subsection{PCR-Based Genotyping}
+As \textcite{limaye2023genotyping} note, PCR remains the standard method for focused genotyping. It works best when the expected allele is already known, which is why \textcite{byambaa2020generation} still used it for colony management, mutation checks, and early confirmation of genome-editing outcomes. Its limits are also clear: \textcite{carrington2022comprehensive} and \textcite{zheng2022simple} show that mixed alleles, mosaic founders, very small indels, or larger rearrangements can be missed or left unresolved. For that reason, PCR now often serves as the first layer of genotype assessment rather than the full answer.
 
-\subsection{Whole genome sequencing}
+\subsection{SNP Arrays and Targeted Panels}
+SNP arrays and targeted panels sit between single-locus assays and sequencing. They are most useful when researchers need standardized measurement of known variants across many samples, especially for strain verification, background control, and reproducibility, as shown for mouse and rat panels \parencite{sigmon2020content,lu2024identification}. In mice, \textcite{sigmon2020content} showed that MiniMUGA can improve rigor by confirming strain identity and revealing background differences that may confound phenotype analysis. Similar logic applies to targeted rat or substrain panels, where \textcite{miura2022characterization} and \textcite{lu2024identification} showed gains for background control, although array-versus-sequencing comparisons in diverse populations still show limited discovery power \parencite{chat2022ultra,deng2022comparison}.
 
-\subsection{Low coverage sequencing}
+\section{Sequencing-Based Genotyping Technologies}
+Recent progress in genotyping is tightly linked to routine sequencing. Broad technology reviews by \textcite{satam2023next} and \textcite{kockum2023overview} show that, sequencing is now better understood as a set of design choices about genome coverage, sequencing depth, cohort size, and read length rather than as a single method. Since 2020, studies of genome-scale typing have shown a move away from fixed marker panels and toward strategies that recover more of the genome directly \parencite{uelze2020typing}. This change has expanded variant discovery, haplotype inference, and access to structural variation, while also making reference quality and bioinformatic processing central to performance.
 
-\subsection{Reduced representation methods}
+\subsection{Whole-Genome Sequencing}
+Whole-genome sequencing provides the broadest short-read framework for genotyping because it samples coding and non-coding regions in one experiment \parencite{uelze2020typing}. Its value lies not only in SNP and indel discovery, but also in placing small variants, haplotypes, copy-number changes, and broader structural patterns into a single genome-wide view \parencite{kockum2023overview}. In model organisms, this value rises with reference quality: \textcite{de2024revamped} showed this clearly in rat, and \textcite{johnson2025genome} showed the same pattern in killifish. WGS has therefore moved genotyping from marker confirmation toward genome-wide discovery, although repetitive DNA, structural complexity, and cross-study standardization remain major challenges \parencite{morton2020challenges,de2021towards,mahmoud2025hitchhiker}.
+
+\subsection{Low-Coverage Whole-Genome Sequencing}
+As \textcite{lou2021beginner} argue, low-coverage whole-genome sequencing changes the economics of genotyping by shifting sequencing effort from depth to sample number. This tradeoff is attractive in large mapping populations and outbred systems, where downstream analyses often gain more from broader sampling than from deep sequencing of each individual \parencite{martin2021low}. The approach is analytically demanding, because lcWGS rarely supports confident hard genotype calls on its own. Instead, it depends on genotype-likelihood methods, imputation, and reference panels or linkage structure that match the study population \parencite{lou2021beginner,deng2022comparison}. When those conditions are met, \textcite{chat2022ultra} and \textcite{liu2024accurate} show that lcWGS can match or outperform array-based designs, reduce ascertainment bias, and recover novel variation at similar cost. When they are not, uncertainty is carried forward rather than resolved.
+
+\subsection{Reduced-Representation Methods}
+Reduced-representation methods remain useful when full-genome sequencing is still too expensive or unnecessary. As \textcite{rajendran2022genotyping} make clear, their basic logic is deliberate incompleteness: by reducing genomic complexity before sequencing, methods such as genotyping-by-sequencing and RAD-seq let researchers type many samples at lower cost. They are especially practical in large cohorts, early-stage resource building, and systems with large or repetitive genomes, as shown in rat-focused applications by \textcite{gileta2020adapting} and \textcite{sjodin2020rapidrat}. The tradeoff is familiar: marker coverage is uneven, missing data are common, and downstream analysis depends more heavily on imputation and reference quality \parencite{rajendran2022genotyping,gileta2020adapting}. In practice, these designs are best viewed as pragmatic genome-sampling strategies rather than direct substitutes for whole-genome sequencing.
+
+\section{Genotyping in Genome Editing Experiments}
+Genome editing has made mutation detection routine, but the key question is usually not whether editing occurred. The harder question is which allele each founder carries. As \textcite{byambaa2020generation} and \textcite{carrington2022comprehensive} show, CRISPR workflows can create small indels, mixed alleles, and mosaic founders in the same experiment, and \textcite{byambaa2020generation} also showed that even a confirmed sequence change may not produce the expected phenotype. Genotyping in editing studies therefore guides founder selection, line establishment, and phenotype confirmation rather than serving only as a yes-or-no editing check \parencite{limaye2023genotyping,zheng2022simple}.
+
+\subsection{Amplicon Sequencing}
+In their work, \textcite{limaye2023genotyping} highlighted how amplicon sequencing is the clearest follow-up when PCR suggests that an edited locus has changed. It defines the exact indel, separates monoallelic from mosaic founders, and helps distinguish intended edits from nearby alternative outcomes \parencite{byambaa2020generation,carrington2022comprehensive}. This sequence-level view is what allows laboratories to choose the right founders and describe new lines accurately from the start.
+
+\subsection{High-Throughput Mutation Detection}
+As editing projects grow, screening speed becomes almost as important as screening accuracy. \textcite{zheng2022simple} showed that simple nuclease-based gel methods still matter because they provide a fast and low-cost way to sort wild-type, heterozygous, and homozygous small mutations before deeper confirmation. These assays do not replace sequencing, but they reduce the number of samples that must go through slower downstream analysis and help keep large editing programs manageable \parencite{limaye2023genotyping}.
+
+\subsection{Multiplexed Editing Workflows}
+Multiplexed workflows extend this logic by allowing many loci or many animals to be processed together. \textcite{lu2024identification} showed that amplicon-based next-generation sequencing and related barcoded workflows reduce handling time, make colony-scale screening practical, and fit well with higher-throughput editing programs. Even so, sequence confirmation still has to be paired with functional checks, because the presence of an edit does not always mean that the expected biological effect was created \parencite{byambaa2020generation,limaye2023genotyping}.
 
 \section{Genotyping in Model Organism Populations}
+Genotyping becomes most valuable when it supports a shared population resource rather than a single study. As \textcite{matthews2020turn} argue, a species starts to function like a modern model organism when its genomes, markers, annotations, and sample collections can be reused across projects. In that setting, genotyping is not just a measurement step. It becomes part of the infrastructure that makes mapping, validation, and systems genetics cumulative, as seen in integrated rat and killifish resources \parencite{zinski2021genome,poeschla2020turquoise}.
 
-\subsection{Mouse}
+\subsection{Mouse Populations and Reference Resources}
+Mouse genetics remains the clearest example because the field combines long-established strains with practical tools for routine quality control. \textcite{sigmon2020content} showed that arrays such as MiniMUGA improve rigor by checking strain identity, detecting contamination, and monitoring background composition. \textcite{miura2022characterization} likewise showed that substrain-level SNP panels can support mapping without importing large background effects from more distant crosses. Together, these resources show how mature mouse genotyping now supports both day-to-day colony control and more careful genetic mapping \parencite{kockum2023overview}.
 
 \subsection{Heterogeneous Stock Rats}
+Heterogeneous stock rats show the value of dense genotyping in an outbred population with a long recombination history \parencite{zinski2021genome}. This design improves fine mapping, but it also demands accurate genome-wide marker data. That need first drove the adaptation of genotyping-by-sequencing for HS rats, as shown by \textcite{gileta2020adapting}, and later lower-cost, higher-throughput strategies that recover millions of variants with strong concordance \parencite{chen2025cost}. The population became even more useful as the rat reference genome improved, because \textcite{de2024revamped} showed that better assemblies improved mapping, variant discovery, and downstream omics analysis. Shared biobanks from \textcite{carrette2021cocaine}, prediction tools such as RATTACA from \textcite{johnson2023rattaca}, and large association and regulatory studies \parencite{munro2022regulatory,leal2023genome,kuhn2025genome,tonnele2025genetic} now make HS rat genotypes reusable across multiple research programs instead of limiting them to one project at a time.
 
-\subsection{Emerging model organisms}
+\subsection{Emerging Vertebrate Models: Killifish}
+Killifish show how an emerging species becomes a practical genetic model once reference resources catch up with the biology. As \textcite{poeschla2020turquoise} emphasized, the turquoise killifish first drew attention because its short lifespan offers a fast vertebrate system for aging research. The model became far more useful as genome assemblies, transcriptome annotations, and strain comparisons improved \parencite{johnson2020draft,johnson2025genome,ayana2025integrating}. With these resources in place, recent studies have moved beyond simple resource building and now connect genotype and molecular variation to lifespan differences, adaptive traits, and immune aging \parencite{mazzetto2025analysis,miller2024independently,morabito2023spontaneous}. More broadly, killifish show how quickly genotyping gains value when an emerging model accumulates usable reference data and comparative population resources \parencite{matthews2020turn}.
 
-\section{Genotype Processing Pipelines}
+\section{Computational Pipelines for Genotype Processing}
+Modern genotyping does not end when sequencing finishes. As \textcite{zverinova2022variant} stress, reads still have to be aligned, filtered, compared to a reference, and translated into calls that are accurate enough for downstream biology. Systematic evaluations by \textcite{barbitoff2022systematic} and \textcite{majidian2023genomic} make the same point: variant calling, imputation, normalization, and quality control are part of genotyping itself rather than cleanup steps added afterwards.
 
-\subsection{Variant calling}
+\subsection{Variant Calling Pipelines}
+Variant calling is best understood as a model choice, not a push-button step \parencite{zverinova2022variant}. Different callers can give different answers from the same reads, and benchmarking studies show that performance depends on assay type, alignment quality, reference quality, organism, and variant class \parencite{barbitoff2022systematic,majidian2023genomic}. In coding short-read benchmarks, \textcite{barbitoff2022systematic} found that DeepVariant often performed strongly. Even so, ranking does not automatically transfer to plants \parencite{schilbert2020comparison}, long-read RNA sequencing \parencite{de2023transformation}, non-human genomes \parencite{choi2025learning}, or somatic exomes \parencite{guille2025benchmarking,park2025accurate}. In some settings, improved alignment handling or voting-based ensembles outperform any single default caller \parencite{de2023transformation,guille2025benchmarking}. The practical lesson is simple: there is no universally best caller outside the context of a specific dataset and a specific benchmark.
 
-\subsection{Genotype imputation}
+\subsection{Genotype Imputation and Haplotype Reconstruction}
+Imputation and haplotype reconstruction are especially important in low-coverage and outbred-population studies. As \textcite{lou2021beginner} explain, imputation recovers genotype states that are only partly observed in sequence data, while haplotype reconstruction captures larger inherited blocks that can be more informative than isolated markers. These methods are indispensable in large mapping populations, but their success depends on suitable reference panels, strong quality control, and well-matched genome builds \parencite{deng2022comparison,gileta2020adapting}. When those conditions are met, studies in diverse populations and rat resources show that they enable high-resolution work at manageable cost \parencite{liu2024accurate,johnson2023rattaca,chen2025cost,de2024revamped}. When they are not, uncertainty can be amplified rather than reduced.
 
-\section{Genotype–Phenotype Integration Platforms}
+\subsection{Genotype Data Standardization and Quality Control}
+Standardization and quality control decide whether a genotype dataset can be trusted beyond the paper that first reports it. As \textcite{majidian2023genomic} argue, benchmark sets, normalized variant representations, stable file formats, clear metadata, and reproducible workflows all make cross-study comparison possible. This is harder than it sounds, because benchmark datasets are expensive to build and always partial, especially in complex regions and nonhuman systems \parencite{barbitoff2022systematic}. Even so, without explicit benchmarking and transparent pipelines, claims of accuracy remain weak. Open and containerized workflows in model organisms show how much reproducibility can improve when analysis steps are visible and portable \parencite{ellison2020mutanthuntwgs,vedi20232022,de2024revamped}.
 
-\subsection{GeneNetwork}
+\section{Genotype--Phenotype Integration Platforms}
+Genotype datasets achieve their greatest value when they can be linked systematically to phenotype, expression, and other molecular data, a point illustrated by integrated population resources in \textcite{zinski2021genome}. At that point, the key question is not only whether genotypes are accurate, but whether they are standardized and accessible enough to support mapping, correlation analysis, and systems-level inference \parencite{vedi20232022,carrette2021cocaine}. Data infrastructure is therefore an essential part of contemporary genetics.
 
-\section{Future Directions}
+\subsection{GeneNetwork and Related Systems Genetics Resources}
+GeneNetwork illustrates how genotype--phenotype integration can become a durable analytical platform. As \textcite{sloan2016genenetwork} and \textcite{mulligan2017genenetwork} show, it can function both as a web-based genetics framework and as a toolbox for systems genetics workflows, including trait mapping, correlation analysis, network exploration, and the joint use of genotype and phenotype data across cohorts. This model is directly relevant to rat genetics, where regulatory studies, behavioral analyses, and multi-cohort projects increasingly depend on the ability to connect genotype resources with molecular and organismal phenotypes in a consistent analytical environment \parencite{munro2022regulatory,kuhn2025genome,tonnele2025genetic}. In practical terms, preparing heterogeneous stock rat genotypes for reuse in systems genetics platforms helps turn individual datasets into community resources that support QTL analysis, cross-study comparison, and integrative discovery over time \parencite{johnson2023rattaca,vedi20232022,carrette2021cocaine}.
 
-\section{Conclusion} 
+\section{Emerging Directions in Genotyping}
+Current developments in genotyping point toward richer reference frameworks, more adaptive variant calling, and better access to complex forms of variation, as argued by \textcite{de2021towards} and \textcite{mahmoud2025hitchhiker}. These trends extend the broader movement away from sparse marker systems and toward more complete and flexible representations of genomes and populations. They also set up two linked questions: how much reference bias can be removed by pangenome-style resources, and how far AI-assisted callers can push accuracy without creating new, hard-to-detect biases \parencite{abdelwahab2025artificial}.
 
+\subsection{Richer Reference Genomes and Pangenome-Style Genotyping}
+A single linear reference is often an incomplete representation of population diversity. Recent improvements in rat and killifish assemblies already show how strongly better references can change what forms of variation become detectable, with clear examples from \textcite{de2024revamped} and \textcite{johnson2025genome}. This trend naturally motivates pangenome-style and graph-based frameworks, which can reduce reference bias, improve structural-variant representation, and make genotyping more portable across populations \parencite{morton2020challenges,de2021towards,mahmoud2025hitchhiker}. The tradeoffs are practical: graph-aware mapping and variant calling remain computationally heavier, toolchains are less mature, and population-specific graphs or panels are often needed to avoid underperforming on underrepresented haplotypes.
 
+\subsection{AI-Assisted Variant Calling}
+AI-assisted variant calling is part of the effort to improve difficult calls, but reviews and benchmarking papers show that its value still depends on training data, alignment quality, and the benchmark used for evaluation \parencite{abdelwahab2025artificial,majidian2023genomic}. \textcite{park2025accurate} showed that DeepSomatic can perform strongly across multiple sequencing technologies, while \textcite{guille2025benchmarking} and \textcite{choi2025learning} showed the flip side: performance can drop sharply when input quality, species, or benchmark changes. AI reduces some systematic errors and can recover signal in noisy contexts, but it also inherits dataset bias, can be brittle to domain shift, and adds compute cost and interpretability gaps. It should therefore be treated as a validated module inside a benchmarked pipeline, not as a reason to relax alignment, QC, or orthogonal confirmation.
 
+\subsection{Long-Read Sequencing}
+Long-read sequencing occupies a distinct place in contemporary genotyping because its main advantage is not simply more sequence, but more contiguous sequence. As \textcite{de2021towards} and \textcite{mahmoud2025hitchhiker} show, long reads improve structural-variant detection, haplotype phasing, tandem-repeat analysis, and de novo assembly by spanning repetitive regions and larger alleles that short reads often leave ambiguous. Population-scale long-read studies are now technically feasible, but the biological gains come with higher DNA-quality requirements, heavier computational demands, and persistent needs for benchmarking, validation, and better variant annotation \parencite{morton2020challenges,hemker2026manual,luan2020evaluating}. Long reads are therefore best viewed as a high-resolution extension of genome-wide genotyping, especially useful when the biology of interest lies in complex or previously hidden sequence space.
 
+\section{Challenges and Limitations}
+Several limitations still shape genotyping practice. \textcite{morton2020challenges} and \textcite{hemker2026manual} show that repetitive DNA, structural variants, and reference bias continue to complicate analysis in many genomic regions, and \textcite{de2024revamped} make clear that better sequencing alone does not remove these problems if the reference remains incomplete. Pangenome-style resources can soften reference bias, but they also introduce heavier compute, graph-specific tooling, and the need for population-aware panels to avoid uneven performance \parencite{de2021towards,mahmoud2025hitchhiker}. Low-coverage designs add another tradeoff: \textcite{lou2021beginner} showed why they allow larger cohorts and lower costs, but \textcite{deng2022comparison} and \textcite{liu2024accurate} also showed how strongly success depends on imputation quality, reference suitability, and careful quality control. AI-based callers reduce some error modes yet remain sensitive to alignment quality and training set bias, so they still require benchmarking and orthogonal checks \parencite{abdelwahab2025artificial,majidian2023genomic,guille2025benchmarking}. More broadly, large-scale genotyping now depends on data storage, metadata management, and interoperability almost as much as on sequencing chemistry \parencite{vedi20232022}. Benchmarking therefore remains essential, because differences in references, callers, and filters can change biological interpretation in meaningful ways \parencite{zverinova2022variant,barbitoff2022systematic,pei2021benchmarking,pinto2026variant,majidian2023genomic}.
 
-\end{document} 
+\section{Conclusion}
+Reviews by \textcite{kockum2023overview} and \textcite{satam2023next} show that, since 2020, genotyping in model organisms has evolved from a mainly marker-centered practice into a genome-scale and data-intensive discipline. Classical methods still matter for targeted applications, but the field is now defined mainly by sequencing-based variant discovery, population-aware inference, and computational pipelines that can produce reliable and reusable genotype datasets \parencite{lou2021beginner,zverinova2022variant}.
 
+The strongest current studies combine affordable sequencing, improved references, robust processing pipelines, and platforms that support genotype--phenotype integration. Heterogeneous stock rats and killifish illustrate this transition in different ways, with rat studies emphasizing reusable population resources and regulatory mapping \parencite{de2024revamped,munro2022regulatory,tonnele2025genetic,kuhn2025genome} and killifish studies emphasizing the value of improved assemblies and comparative resources \parencite{johnson2025genome}. GeneNetwork represents the kind of analytical infrastructure needed to make genotype resources broadly useful \parencite{sloan2016genenetwork,mulligan2017genenetwork}. The next phase of progress will depend on integration. Genotype datasets will have their greatest impact when they can be linked efficiently to phenotype, expression, and mechanism within durable community frameworks \parencite{zinski2021genome}.
 
+\printbibliography
+
+\end{document}
